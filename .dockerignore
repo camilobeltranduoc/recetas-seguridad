@@ -1,0 +1,45 @@
+# Archivos y directorios a ignorar al crear la imagen Docker
+
+# Directorios de build
+target/
+build/
+*.class
+
+# Logs
+*.log
+logs/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Maven wrapper JAR (opcional, pero lo mantenemos en la imagen)
+# .mvn/
+
+# Documentación
+*.md
+DESARROLLO_APLICACION.md
+INFORME_VULNERABILIDADES_OWASP.md
+resumen_para_claude.md
+
+# PDFs
+*.pdf
+
+# Otros
+docker-compose.yml
+Dockerfile
+.dockerignore

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  recetas-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: recetas-seguridad:latest
+    container_name: recetas-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Variables de entorno para la aplicación
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    restart: unless-stopped
+    networks:
+      - recetas-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/recetas"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  recetas-network:
+    driver: bridge

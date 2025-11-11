@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas del Mundo</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Recetas del Mundo</h1>
+            <ul>
+                <li><a th:href="@{/recetas}">Inicio</a></li>
+                <li><a th:href="@{/buscar}">Buscar</a></li>
+                <li sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}">Iniciar sesión</a>
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                    <span class="usuario-logueado">
+                        Hola, <span sec:authentication="name">Usuario</span>
+                    </span>
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="btn-logout">Cerrar sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="banner">
+            <h2>Anuncio patrocinado</h2>
+            <p>Empresa Agrícola del Valle - Ingredientes frescos directamente del campo a tu cocina. Visítanos en www.agricoladelvalle.cl</p>
+        </section>
+
+        <section class="recetas-lista">
+            <h2>Recetas destacadas</h2>
+            <div class="recetas-grid">
+                <div th:each="receta : ${recetas}" class="receta-card">
+                    <h3 th:text="${receta.nombre}">Nombre de la receta</h3>
+                    <p th:text="${receta.descripcion}">Descripción de la receta</p>
+                    <p class="info">
+                        <span th:text="'Tipo: ' + ${receta.tipoCocina}"></span> |
+                        <span th:text="'País: ' + ${receta.pais}"></span> |
+                        <span th:text="'Dificultad: ' + ${receta.dificultad}"></span>
+                    </p>
+                    <a th:href="@{/recetas/{id}(id=${receta.id})}" class="btn">Ver detalle</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Recetas del Mundo - Proyecto académico</p>
+    </footer>
+</body>
+</html>
