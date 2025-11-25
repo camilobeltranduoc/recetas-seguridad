@@ -1,16 +1,40 @@
 package com.recetas.app.recetas_seguridad.model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "recetas")
 public class Receta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(length = 1000)
     private String descripcion;
+
+    @Column(name = "tipo_cocina")
     private String tipoCocina;
+
     private String pais;
+
     private String dificultad;
+
+    @ElementCollection
+    @CollectionTable(name = "receta_ingredientes", joinColumns = @JoinColumn(name = "receta_id"))
+    @Column(name = "ingrediente")
     private List<String> ingredientes;
+
+    @ElementCollection
+    @CollectionTable(name = "receta_pasos", joinColumns = @JoinColumn(name = "receta_id"))
+    @Column(name = "paso", length = 500)
     private List<String> pasos;
+
+    public Receta() {
+    }
 
     public Receta(Long id, String nombre, String descripcion, String tipoCocina,
                   String pais, String dificultad, List<String> ingredientes, List<String> pasos) {

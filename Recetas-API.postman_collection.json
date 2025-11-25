@@ -1,0 +1,492 @@
+{
+	"info": {
+		"name": "Recetas API",
+		"description": "API REST para gestión de recetas con autenticación JWT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticación",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"    console.log(\"Token guardado: \" + jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"password1\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Obtiene un token JWT para autenticación.\n\nUsuarios disponibles:\n- user1 / password1\n- user2 / password2\n- admin / admin123"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recetas Públicas",
+			"item": [
+				{
+					"name": "Listar todas las recetas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas"
+							]
+						},
+						"description": "Obtiene el listado completo de recetas (sin autenticación)"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener receta por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"1"
+							]
+						},
+						"description": "Obtiene los detalles de una receta específica (sin autenticación)"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar recetas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/buscar?nombre=tacos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"buscar"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "tacos"
+								},
+								{
+									"key": "tipoCocina",
+									"value": "Mexicana",
+									"disabled": true
+								},
+								{
+									"key": "pais",
+									"value": "México",
+									"disabled": true
+								},
+								{
+									"key": "dificultad",
+									"value": "Fácil",
+									"disabled": true
+								},
+								{
+									"key": "ingredientes",
+									"value": "cerdo",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Busca recetas por múltiples criterios (sin autenticación).\n\nParámetros opcionales:\n- nombre\n- tipoCocina\n- pais\n- dificultad\n- ingredientes"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Multimedia (Privado)",
+			"item": [
+				{
+					"name": "Agregar foto/video a receta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tipo\": \"foto\",\n    \"url\": \"https://ejemplo.com/foto-paella.jpg\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/multimedia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"multimedia"
+							]
+						},
+						"description": "Agrega una foto o video a una receta.\n\nREQUIERE AUTENTICACIÓN JWT.\n\nTipos válidos: foto, video"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener multimedia de receta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/multimedia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"multimedia"
+							]
+						},
+						"description": "Obtiene todas las fotos y videos de una receta.\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comentarios y Valoraciones (Privado)",
+			"item": [
+				{
+					"name": "Agregar comentario y valoración",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"texto\": \"Excelente receta, muy autentica\",\n    \"valoracion\": 5\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/comentarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"comentarios"
+							]
+						},
+						"description": "Agrega un comentario con valoración (1-5 estrellas) a una receta.\n\nREQUIERE AUTENTICACIÓN JWT.\n\nEl sistema guarda automáticamente el usuario y la fecha."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener comentarios de receta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/comentarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"comentarios"
+							]
+						},
+						"description": "Obtiene todos los comentarios de una receta ordenados por fecha (más recientes primero).\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Compartir Recetas (Privado)",
+			"item": [
+				{
+					"name": "Compartir en Facebook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/compartir?plataforma=facebook",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"compartir"
+							],
+							"query": [
+								{
+									"key": "plataforma",
+									"value": "facebook"
+								}
+							]
+						},
+						"description": "Genera un enlace para compartir la receta en Facebook.\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Compartir en Twitter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/2/compartir?plataforma=twitter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"2",
+								"compartir"
+							],
+							"query": [
+								{
+									"key": "plataforma",
+									"value": "twitter"
+								}
+							]
+						},
+						"description": "Genera un enlace para compartir la receta en Twitter.\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Compartir en WhatsApp",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/3/compartir?plataforma=whatsapp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"3",
+								"compartir"
+							],
+							"query": [
+								{
+									"key": "plataforma",
+									"value": "whatsapp"
+								}
+							]
+						},
+						"description": "Genera un enlace para compartir la receta en WhatsApp.\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Compartir por Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/recetas/privado/1/compartir?plataforma=email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"recetas",
+								"privado",
+								"1",
+								"compartir"
+							],
+							"query": [
+								{
+									"key": "plataforma",
+									"value": "email"
+								}
+							]
+						},
+						"description": "Genera un enlace mailto para compartir la receta por email.\n\nREQUIERE AUTENTICACIÓN JWT."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

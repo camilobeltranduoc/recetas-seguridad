@@ -1,6 +1,27 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: recetas-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: recetas_db
+      MYSQL_USER: recetas_user
+      MYSQL_PASSWORD: recetas_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - recetas-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   recetas-app:
     build:
       context: .
@@ -10,9 +31,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Variables de entorno para la aplicación
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xmx512m -Xms256m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/recetas_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=recetas_user
+      - SPRING_DATASOURCE_PASSWORD=recetas_pass
+    depends_on:
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - recetas-network
@@ -22,6 +48,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+volumes:
+  mysql-data:
 
 networks:
   recetas-network:
