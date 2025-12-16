@@ -33,3 +33,9 @@ build/
 
 ### Environment Variables ###
 .env
+
+### Claude Code ###
+.claude/
+
+### Deployment scripts with credentials ###
+deploy-vm.sh
