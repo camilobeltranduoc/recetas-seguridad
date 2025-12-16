@@ -26,11 +26,11 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/recetas", "/buscar", "/login", "/css/**").permitAll()
+                .requestMatchers("/", "/recetas", "/recetas/**", "/buscar", "/login").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/recetas/privado/**").authenticated()
                 .requestMatchers("/api/recetas", "/api/recetas/*", "/api/recetas/buscar").permitAll()
-                .requestMatchers("/recetas/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
