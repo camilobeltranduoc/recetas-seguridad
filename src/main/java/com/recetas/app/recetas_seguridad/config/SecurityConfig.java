@@ -61,15 +61,14 @@ public class SecurityConfig {
             .contentTypeOptions(org.springframework.security.config.Customizer.withDefaults())
             .contentSecurityPolicy(csp -> csp
                 .policyDirectives("default-src 'self'; " +
-                                "script-src 'self'; " +
-                                "style-src 'self'; " +
-                                "img-src 'self' data:; " +
+                                "script-src 'self' 'unsafe-inline'; " +
+                                "style-src 'self' 'unsafe-inline'; " +
+                                "img-src 'self' data: https:; " +
                                 "font-src 'self'; " +
                                 "object-src 'none'; " +
                                 "base-uri 'self'; " +
                                 "form-action 'self'; " +
-                                "frame-ancestors 'none'; " +
-                                "upgrade-insecure-requests")
+                                "frame-ancestors 'none'")
             )
         );
 
